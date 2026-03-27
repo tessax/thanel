@@ -22,7 +22,15 @@ if not os.path.exists(DATA_FILE):
     with open(DATA_FILE, "w") as f:
         json.dump([], f)
 
-model = tf.keras.models.load_model("thanel_model.h5")
+import gdown
+
+model_path = "thanel_model.h5"
+
+if not os.path.exists(model_path):
+    url = "https://drive.google.com/uc?id=1Aeiq3j6irysqOhbL_mm0U3Ig9UH4z4EQ"
+    gdown.download(url, model_path, quiet=False)
+
+model = tf.keras.models.load_model(model_path)
 
 # ================= LOGIN =================
 @app.route("/login", methods=["POST"])
@@ -197,4 +205,7 @@ def remove_entry(filename):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    import os
+
+port = int(os.environ.get("PORT", 5000))
+app.run(host="0.0.0.0", port=port)
